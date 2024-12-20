@@ -4,8 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
+const Core_1 = __importDefault(require("./lib/Core"));
 const path_1 = __importDefault(require("path"));
 let mainWindow;
+let CoreObj;
 const createWindow = () => {
     const preloadPath = path_1.default.join(__dirname, 'preload.js');
     console.log("preloadPath: ", preloadPath);
@@ -15,7 +17,7 @@ const createWindow = () => {
         webPreferences: {
             contextIsolation: true,
             preload: preloadPath,
-            nodeIntegration: false, // 보안을 위해 false로 설정
+            nodeIntegration: false, // For security
         },
         autoHideMenuBar: true,
     });
@@ -24,9 +26,22 @@ const createWindow = () => {
         mainWindow = null;
     });
 };
-electron_1.ipcMain.on('backup-start', (event) => {
-    console.log('Button clicked. Sending response to renderer.');
-    // event.sender.send('button-clicked-response', 'Hello from Main Process!');
+const load_status = (text) => {
+    mainWindow?.webContents.send('load_status', text);
+};
+electron_1.ipcMain.on('backup-start', async (event) => {
+    CoreObj = new Core_1.default();
+    load_status("초기화 시작");
+    await CoreObj.init();
+    load_status("초기화 완료");
+    await CoreObj.BackUpAddons(load_status);
+});
+electron_1.ipcMain.on('load-start', async (event) => {
+    CoreObj = new Core_1.default();
+    load_status("초기화 시작");
+    await CoreObj.init();
+    load_status("초기화 완료");
+    await CoreObj.RestoreAddons(load_status);
 });
 electron_1.app.on('ready', createWindow);
 electron_1.app.on('window-all-closed', () => {

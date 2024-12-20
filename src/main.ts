@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import Core from './lib/Core';
 import path from 'path';
 
 let mainWindow: BrowserWindow | null;
+let CoreObj: Core | null;
 
 const createWindow = () => {
   const preloadPath = path.join(__dirname, 'preload.js');
@@ -25,9 +27,24 @@ const createWindow = () => {
   });
 };
 
-ipcMain.on('backup-start', (event) => {
-  console.log('Button clicked. Sending response to renderer.');
-  // event.sender.send('button-clicked-response', 'Hello from Main Process!');
+const load_status = (text: string) => {
+  mainWindow?.webContents.send('load_status', text);
+}
+
+ipcMain.on('backup-start', async (event) => {
+  CoreObj = new Core();
+  load_status("초기화 시작");
+  await CoreObj.init();
+  load_status("초기화 완료");
+  await CoreObj.BackUpAddons(load_status)
+});
+
+ipcMain.on('load-start', async (event) => {
+  CoreObj = new Core();
+  load_status("초기화 시작");
+  await CoreObj.init();
+  load_status("초기화 완료");
+  await CoreObj.RestoreAddons(load_status)
 });
 
 

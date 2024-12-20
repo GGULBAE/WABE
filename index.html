@@ -41,6 +41,11 @@
       // Preload에서 노출된 API 호출
       window.api.send('load-start');
     });
+
+    window.api.on('load_status', (event, message) => {
+      console.log('Received from main process:', message);
+      document.getElementById("status").innerText = message;
+    });
   </script>
 </body>
 
