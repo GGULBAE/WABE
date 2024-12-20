@@ -1,6 +1,7 @@
+import { app } from "electron";
+
 const fs = require('fs').promises;
 const path = require('path');
-const process = require('process');
 const { authenticate } = require('@google-cloud/local-auth');
 const { google } = require('googleapis');
 
@@ -8,8 +9,8 @@ type Credentials = typeof google.auth.OAuth2.prototype.credentials;
 
 class GoogleAuth {
   SCOPES = ['https://www.googleapis.com/auth/drive'];
-  TOKEN_PATH = path.join(process.cwd(), '.credentials', 'token.json');
-  CREDENTIALS_PATH = path.join(process.cwd(), '.credentials', 'credentials.json');
+  TOKEN_PATH = path.join(app.getAppPath(), '.credentials', 'token.json');
+  CREDENTIALS_PATH = path.join(app.getAppPath(), '.credentials', 'credentials.json');
 
   async loadSavedCredentialsIfExist(): Promise<Credentials | null> {
     try {

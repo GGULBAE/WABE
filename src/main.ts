@@ -7,7 +7,6 @@ let CoreObj: Core | null;
 
 const createWindow = () => {
   const preloadPath = path.join(__dirname, 'preload.js');
-  console.log("preloadPath: ", preloadPath);
 
   mainWindow = new BrowserWindow({
     width: 500,
@@ -16,11 +15,13 @@ const createWindow = () => {
       contextIsolation: true,
       preload: preloadPath,
       nodeIntegration: false, // For security
+      webSecurity: false,  // 보안 비활성화
     },
     autoHideMenuBar: true,
   });
-  
-  mainWindow.loadFile('../index.html');
+  const indexPath = path.join(__dirname, 'index.html');
+  load_status(app.getAppPath());
+  mainWindow.loadFile(indexPath);
 
   mainWindow.on('closed', () => {
     mainWindow = null;

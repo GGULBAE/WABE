@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%; height: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WABE - v0.0.0-beta</title>
+
+</head>
+
+<body style="margin: 0; padding: 0; width: 100%; height: 100%; user-select:none;">
+  <div style="display: flex; width: calc(100% - 40px); height: 100%; flex-direction: row; margin: 0 20px;
+  justify-content: center;
+  align-items: center; gap: 10px">
+    <div id="backup"
+      style="width: 50%; height: 50%; display: flex; justify-content: center; align-items: center; background-color: #3892F3; color: white; cursor: pointer;">
+      백업하기
+    </div>
+    <div id="load"
+      style="width: 50%; height: 50%; display: flex; justify-content: center; align-items: center; background-color: #3892F3; color: white; cursor: pointer;">
+      불러오기
+    </div>
+  </div>
+  <div id="status" style="position: absolute; bottom: 10px; right: 20px; font-size: 12px; text-align: right;">
+
+  </div>
+
+  <script>
+    if (window.api) {
+      console.log('Preload API is loaded');
+      window.api.send('test-event', { test: 'data' });
+    } else {
+      console.error('Preload API not loaded');
+    }
+    document.getElementById('backup').addEventListener('click', () => {
+      // Preload에서 노출된 API 호출
+      window.api.send('backup-start');
+    });
+
+    document.getElementById('load').addEventListener('click', () => {
+      // Preload에서 노출된 API 호출
+      window.api.send('load-start');
+    });
+
+    window.api.on('load_status', (event, message) => {
+      console.log('Received from main process:', message);
+      document.getElementById("status").innerText = message;
+    });
+  </script>
+</body>
+
+</html>

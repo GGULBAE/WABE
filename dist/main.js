@@ -10,7 +10,6 @@ let mainWindow;
 let CoreObj;
 const createWindow = () => {
     const preloadPath = path_1.default.join(__dirname, 'preload.js');
-    console.log("preloadPath: ", preloadPath);
     mainWindow = new electron_1.BrowserWindow({
         width: 500,
         height: 200,
@@ -18,10 +17,13 @@ const createWindow = () => {
             contextIsolation: true,
             preload: preloadPath,
             nodeIntegration: false, // For security
+            webSecurity: false, // 보안 비활성화
         },
         autoHideMenuBar: true,
     });
-    mainWindow.loadFile('../index.html');
+    const indexPath = path_1.default.join(__dirname, 'index.html');
+    load_status(electron_1.app.getAppPath());
+    mainWindow.loadFile(indexPath);
     mainWindow.on('closed', () => {
         mainWindow = null;
     });

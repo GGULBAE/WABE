@@ -4,6 +4,7 @@ import GoogleDriver from './GoogleDriver';
 import WOW from './WOW';
 import * as path from 'path';
 import ZipManager from './ZipManager';
+import { app } from 'electron';
 
 class Core {
   client: Credentials = null;
@@ -32,7 +33,7 @@ class Core {
     load_status("와우 폴더 불러오기 완료");
 
     // 2. 와우 폴더 내 애드온 설정 파일, 계정 정보 파일들을 압축
-    const addonZipFilePath = path.join(process.cwd(), 'temp', 'backup-temp.zip')
+    const addonZipFilePath = path.join(app.getAppPath(), 'temp', 'backup-temp.zip')
     load_status("압축시작 - " + addonZipFilePath);
     await ZipManager.createZip([WOWPaths.WTF, WOWPaths.fonts, WOWPaths.interface], addonZipFilePath)
     load_status("압축완료");
@@ -115,7 +116,7 @@ class Core {
     const files = await this.driver?.listFiles(storageId);
     if (files === undefined) return;
     load_status("백업파일 다운로드 시작 ");
-    const targetDir = path.join(process.cwd(), 'temp', 'backup-downloaded.zip')
+    const targetDir = path.join(app.getAppPath(), 'temp', 'backup-downloaded.zip')
     const target = files[0];
     if (target.id === undefined || target.id === null) return;
 

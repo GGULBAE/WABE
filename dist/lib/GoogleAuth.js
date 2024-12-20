@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
 const fs = require('fs').promises;
 const path = require('path');
-const process = require('process');
 const { authenticate } = require('@google-cloud/local-auth');
 const { google } = require('googleapis');
 class GoogleAuth {
     constructor() {
         this.SCOPES = ['https://www.googleapis.com/auth/drive'];
-        this.TOKEN_PATH = path.join(process.cwd(), '.credentials', 'token.json');
-        this.CREDENTIALS_PATH = path.join(process.cwd(), '.credentials', 'credentials.json');
+        this.TOKEN_PATH = path.join(electron_1.app.getAppPath(), '.credentials', 'token.json');
+        this.CREDENTIALS_PATH = path.join(electron_1.app.getAppPath(), '.credentials', 'credentials.json');
     }
     async loadSavedCredentialsIfExist() {
         try {
